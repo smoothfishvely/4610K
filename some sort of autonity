@@ -36,4 +36,8 @@ void hopefullyGoodLeft(int target){
   rightFront.stop();
   leftBack.stop();
   rightBack.stop();
+
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1,1);
+  Brain.Screen.print("evelyn is cool");
 }
