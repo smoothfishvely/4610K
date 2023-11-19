@@ -4,9 +4,9 @@ int main(){
   
   while(gyroK.isCalibrating()){
     wait(100,msec);
+  }
 
   hopefullyGoodLeft(-90);
-  }
 }
 
 //gyroK is the inertial
