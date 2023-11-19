@@ -4,9 +4,12 @@ int main(){
   
   while(gyroK.isCalibrating()){
     wait(100,msec);
+
+  hopefullyGoodLeft(-90);
   }
 }
 
+//gyroK is the inertial
 //turning function for left
 //assuming the target for left is a negative number
 void hopefullyGoodLeft(int target){
