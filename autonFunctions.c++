@@ -70,3 +70,55 @@ void calibrate(){
     wait(100,msec);
   }
 }
+
+void autonIntakeIn(double time){
+  intakeMotor.spin(reverse,100,percent);
+  wait(time,seconds);
+  intakeMotor.stop();
+}
+
+void autonIntakeOut(double time){
+  intakeMotor.spin(forward,100,percent);
+  wait(time,seconds);
+  intakeMotor.stop();
+}
+
+void move(double distance,int velocity,float kp){
+  leftFront.setPosition(0,degrees);
+  double heading=gyroK.rotation(degrees);
+  if(velocity>0){
+    while(leftFront.position(degrees)<distance){
+      double error=heading-gyroK.rotation(degrees);
+      double output=error*kp;
+      leftFront.spin(forward,velocity-output,percent);
+      leftBack.spin(forward,velocity-output,percent);
+      rightFront.spin(forward,velocity+output,percent);
+      rightBack.spin(forward,velocity+output,pct);
+      wait(10,msec);
+    }
+  }
+  leftFront.stop();
+  rightFront.stop();
+  rightBack.stop();
+  leftBack.stop();
+}
+
+void moveBack(double distance,int velocity,int kp){
+  leftFront.setPosition(0,degrees);
+  double heading=gyroK.rotation(degrees);
+  if(velocity>0){
+    while(fabs(leftFront.position(degrees))<distance){
+      double error=heading-gyroK.rotation(degrees);
+      double output=error*kp;
+      leftFront.spin(reverse,velocity-output,percent);
+      leftBack.spin(reverse,velocity-output,percent);
+      rightFront.spin(reverse,velocity+output,percent);
+      rightBack.spin(reverse,velocity+output,pct);
+      wait(10,msec);
+    }
+  }
+  leftFront.stop();
+  rightFront.stop();
+  rightBack.stop();
+  leftBack.stop();
+}
