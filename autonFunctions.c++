@@ -55,7 +55,7 @@ void hopefullyGoodRight(int target){
   }
 
   leftFront.setStopping(brake);
-  leftBack.setSTopping(brake);
+  leftBack.setStopping(brake);
   rightBack.setStopping(brake);
   rightFront.setStopping(brake);
   leftFront.stop();
