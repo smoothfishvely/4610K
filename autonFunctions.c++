@@ -64,7 +64,7 @@ void hopefullyGoodRight(int target){
   rightBack.stop();
 }
 
-void calibrate(){
+void awesomeInertial(){
   gyroK.calibrate();
   while(gyroK.isCalibrating()){
     wait(100,msec);
