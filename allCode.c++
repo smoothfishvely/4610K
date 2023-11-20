@@ -21,10 +21,8 @@ using namespace vex;
 
 competition Competition;
 
-//this is the split drive
-//we are using a split drive
-int flyControl = 0;
 int flyWheel(){
+  int flyControl = 0;
   while(true){
     if(Controller1.ButtonB.pressing()){
       if(flyControl == 0){
