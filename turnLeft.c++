@@ -64,15 +64,9 @@ void hopefullyGoodRight(int target){
   rightBack.stop();
 }
 
-//calibrating in the main
-int main(){
+void calibrate(){
   gyroK.calibrate();
-  
   while(gyroK.isCalibrating()){
     wait(100,msec);
   }
-
-  //testing our turn functions
-  hopefullyGoodLeft(-90);
-  hopefullyGoodRight(90);
 }
