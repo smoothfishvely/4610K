@@ -76,6 +76,47 @@ int knooMatics3(){
   }
 }
 
+int knoo1(){
+  int matics = 0;
+  while(true){
+    if(Controller1.ButtonY.pressing()){
+      while(Controller1.ButtonY.pressing()){
+        wait(20,msec);
+      } 
+      matics++;
+      if(matics > 1){
+        matics = 0;
+      }
+
+      if(matics == 0){
+        knooMatics1.set(true);
+      } else{
+        knooMatics1.set(false);
+      }
+    }
+  }
+}
+
+int knoo2(){
+  int k = 0;
+  while(true){
+    if(Controller1.ButtonY.pressing()){
+      while(Controller1.ButtonY.pressing()){
+        wait(20,msec);
+      } 
+      k ++;
+      if(k > 1){
+        k = 0;
+      }
+
+      if(k == 0){
+        knooMatics2.set(true);
+      } else{
+        knooMatics2.set(false);
+      }
+    }
+  }
+}
 
 void driving(){
   
