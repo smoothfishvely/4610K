@@ -336,13 +336,11 @@ void usercontrol(void) {
   }
 }
 
-  /*// Set up callbacks for autonomous and driver control periods.
+int main(){
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
-
-  // Run the pre-autonomous function.
   pre_auton();
-
-  // Prevent main from exiting with an infinite loop.
-  while (true) {
-    wait(100, msec);*/
+  while(true){
+    wait(100,msec);
+  }
+}
