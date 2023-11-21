@@ -1,10 +1,20 @@
+//see the split up code for additional comments
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       C:\Users\Student                                          */
+/*    Created:      Mon Nov 20 2023                                           */
+/*    Description:  V5 project                                                */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // leftFront            motor         14              
-// leftBack             motor         19              
 // rightFront           motor         17              
+// leftBack             motor         19              
 // rightBack            motor         20              
 // intakeMotor          motor         2               
 // bottomFly            motor         11              
@@ -70,7 +80,7 @@ int knooMatics(){
       while(Controller1.ButtonY.pressing()){
         wait(20,msec);
       } 
-      knoo ++;
+      knoo++;
       if(knoo > 1){
         knoo = 0;
       }
@@ -110,11 +120,11 @@ int knoo1(){
 int knoo2(){
   int k = 0;
   while(true){
-    if(Controller1.ButtonY.pressing()){
-      while(Controller1.ButtonY.pressing()){
+    if(Controller1.ButtonX.pressing()){
+      while(Controller1.ButtonX.pressing()){
         wait(20,msec);
       } 
-      k ++;
+      k++;
       if(k > 1){
         k = 0;
       }
@@ -141,12 +151,30 @@ int knooMatics3(){
   }
 }
 
+int rake(){
+  while(true){
+    if(Controller1.ButtonA.pressing()){
+      rakeWithK.spin(forward, 50, pct);
+      wait(0.5, sec);
+      rakeWithK.setStopping(coast);
+      rakeWithK.stop();
+    }
+    if(Controller1.ButtonY.pressing()){
+      rakeWithK.spin(reverse, 50, pct);
+      wait(0.5, sec);
+      rakeWithK.setStopping(hold);
+      rakeWithK.stop();
+    }
+  }
+}
+
 void driving(){
   
     thread f (flyWheel);
     thread i (intake);
     thread s (splitDrive);
     thread n (knooMatics3);
+    thread k (rake);
 
 }
 
@@ -154,16 +182,12 @@ void driving(){
 //-----------------------------------------------------------------------------------------
 //ALL CODE DOWN HERE IS FOR AUTON
 
-//turning funtion for left
-//assuming the target for left is a negative number
 void hopefullyGoodLeft(int target){
   gyroK.resetRotation();
   wait(.25, msec);
-  //we can set timeout later
 
   while(gyroK.rotation(degrees) > target){
     float error = -target + gyroK.rotation(degrees);
-    //edit the kp and minimumSpeed, the 0.25 is just a placeholder for now
     float kp = 0.25;
     float minimumSpeed = 0.25;
     float speed = error * kp + minimumSpeed;
@@ -174,7 +198,6 @@ void hopefullyGoodLeft(int target){
     rightBack.spin(fwd, speed, pct);
   }
 
-  //brake makes the most sense but can change later
   leftFront.setStopping(brake);
   rightFront.setStopping(brake);
   leftBack.setStopping(brake);
@@ -192,11 +215,9 @@ void hopefullyGoodLeft(int target){
 void hopefullyGoodRight(int target){
   gyroK.resetRotation();
   wait(.25, seconds);
-  //where timeout would be
 
   while(gyroK.rotation(degrees) < target){
     float error = target - gyroK.rotation(degrees);
-    //adjust kp and minimum speed to liking
     float kp = .25;
     float minimumSpeed = .25;
     float speed = error * kp + minimumSpeed;
@@ -290,31 +311,10 @@ void pre_auton(void) {
 
 void autonomous(void) {
   // ..........................................................................
-  //DEFENSIVE AUTONNN
-  //step0
-  //gyroK.resetRotation();
-  //move(750,50,1);
-  //backwards?  turnRightNew(45);
+  //OFFENSIVE AUTON
   awesomeInertial();
-  move(750,50,1);
-  hopefullyGoodLeft(-100);
-  move(900,50,1);
-  move(500,50,1);
-  hopefullyGoodRight(45);
-  /*autonIntakeOut(1);
-  moveBack(40,50,1);
-  hopefullyGoodLeft(-15);
-  move(45,50,1);*/
-  /*hopefullyGoodLeft(-55);
-  move(800,50,1);
-  turnRight(-90);
-  move(100,50,1);
-  wait(40,msec);
-  autonIntakeOut(1);
-  moveBack(200,50,1);*/
-  //step1 - turn 180 and then move
-  //step2
-  //step7
+  hopefullyGoodLeft(-45);
+
   // ..........................................................................
 }
 
