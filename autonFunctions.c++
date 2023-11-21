@@ -64,6 +64,7 @@ void hopefullyGoodRight(int target){
   rightBack.stop();
 }
 
+//calibrates the inertial sensor
 void awesomeInertial(){
   gyroK.calibrate();
   while(gyroK.isCalibrating()){
@@ -71,18 +72,21 @@ void awesomeInertial(){
   }
 }
 
+//intake for autonomous period
 void autonIntakeIn(double time){
   intakeMotor.spin(reverse,100,percent);
   wait(time,seconds);
   intakeMotor.stop();
 }
 
+//same as above but for releasing acorns
 void autonIntakeOut(double time){
   intakeMotor.spin(forward,100,percent);
   wait(time,seconds);
   intakeMotor.stop();
 }
 
+//has not been tested
 void move(double distance,int velocity,float kp){
   leftFront.setPosition(0,degrees);
   double heading=gyroK.rotation(degrees);
@@ -103,6 +107,7 @@ void move(double distance,int velocity,float kp){
   leftBack.stop();
 }
 
+//has not been tested
 void moveBack(double distance,int velocity,int kp){
   leftFront.setPosition(0,degrees);
   double heading=gyroK.rotation(degrees);
