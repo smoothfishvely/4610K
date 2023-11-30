@@ -1,4 +1,3 @@
-//see the split up code for additional comments
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
@@ -11,7 +10,6 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
 // leftFront            motor         14              
 // rightFront           motor         17              
 // leftBack             motor         19              
@@ -23,6 +21,7 @@
 // gyroK                inertial      7               
 // knooMatics1          digital_out   A               
 // knooMatics2          digital_out   B               
+// Controller1          controller                    
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -182,6 +181,20 @@ void driving(){
 //-----------------------------------------------------------------------------------------
 //ALL CODE DOWN HERE IS FOR AUTON
 
+void autonRakeDown(){
+  rakeWithK.spin(forward,50,pct);
+  rakeWithK.setStopping(coast);
+  wait(200,msec);
+  rakeWithK.stop();
+}
+
+void autonRakeUp(){
+  rakeWithK.spin(reverse,50,pct);
+  rakeWithK.setStopping(hold);
+  wait(200,msec);
+  rakeWithK.stop();
+}
+
 void hopefullyGoodLeft(int target){
   gyroK.resetRotation();
   wait(.25, msec);
@@ -257,27 +270,22 @@ void autonIntakeOut(double time){
   intakeMotor.stop();
 }
 
-void move(double distance,int velocity,float kp){
+void move(double distance,int velocity){
   leftFront.setPosition(0,degrees);
-  double heading=gyroK.rotation(degrees);
-  if(velocity>0){
-    while(leftFront.position(degrees)<distance){
-      double error=heading-gyroK.rotation(degrees);
-      double output=error*kp;
-      leftFront.spin(forward,velocity-output,percent);
-      leftBack.spin(forward,velocity-output,percent);
-      rightFront.spin(forward,velocity+output,percent);
-      rightBack.spin(forward,velocity+output,pct);
-      wait(10,msec);
+  while(leftFront.position(degrees)<distance){
+    leftFront.spin(forward,velocity,percent);
+    leftBack.spin(forward,velocity,percent);
+    rightFront.spin(forward,velocity,percent);      
+    rightBack.spin(forward,velocity,pct);
+    wait(10,msec);
     }
-  }
   leftFront.stop();
   rightFront.stop();
   rightBack.stop();
   leftBack.stop();
 }
 
-void moveBack(double distance,int velocity,int kp){
+void moveBack(double distance,int velocity,float kp){
   leftFront.setPosition(0,degrees);
   double heading=gyroK.rotation(degrees);
   if(velocity>0){
@@ -312,8 +320,21 @@ void pre_auton(void) {
 void autonomous(void) {
   // ..........................................................................
   //OFFENSIVE AUTON
+  //score preload
   awesomeInertial();
   hopefullyGoodLeft(-45);
+  move(1000,50);
+  /*autonIntakeOut(1);
+
+  //remove opponents match load
+  hopefullyGoodLeft(-45);
+  moveBack(1000,50,0.5);
+  autonRakeDown();
+  move(300,50,0.5);
+  hopefullyGoodRight(90);
+  moveBack(2000,50,0.5);*/
+
+  //touch elevation bar
 
   // ..........................................................................
 }
@@ -336,11 +357,13 @@ void usercontrol(void) {
   }
 }
 
-int main(){
+int main() {
+  // Initializing Robot Configuration. DO NOT REMOVE!
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
   pre_auton();
   while(true){
     wait(100,msec);
+
   }
-}
+} 
