@@ -208,6 +208,55 @@ void driving(){
 
 }
 
+void anotherDrive(){
+    int flyControl = 0;
+  
+    while(true) {
+      // Control flywheel
+      if(Controller1.ButtonB.pressing()) {
+          if(flyControl == 0) {
+            // Start flywheel motors
+            topFly.spin(forward, 100, pct);
+            bottomFly.spin(reverse, 100, pct);
+            flyControl++;
+          } else {
+            // Stop flywheel motors
+            topFly.stop();
+            bottomFly.stop();
+            flyControl--;
+          }
+        }
+
+        // Control intake motor
+        if(Controller1.ButtonR2.pressing()) {
+            intakeMotor.spin(forward, 100, pct);
+        } else if(Controller1.ButtonR1.pressing()) {
+            intakeMotor.spin(reverse, 100, pct);
+        } else {
+            intakeMotor.stop();
+        }
+
+        // Split drive control
+        leftFront.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
+        leftBack.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
+        rightFront.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
+        rightBack.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
+
+        // Control rake
+        if(Controller1.ButtonA.pressing()) {
+            rakeWithK.spin(forward, 100, pct);
+            wait(0.25, sec);
+            rakeWithK.setStopping(coast);
+            rakeWithK.stop();
+        } else if(Controller1.ButtonY.pressing()) {
+            rakeWithK.spin(reverse, 100, pct);
+            wait(0.25, sec);
+            rakeWithK.setStopping(hold);
+            rakeWithK.stop();
+        }
+        wait(20, msec); 
+    } 
+}
 //ALL CODE UP HERE IS DRIVE CODE
 //-----------------------------------------------------------------------------------------
 //ALL CODE DOWN HERE IS FOR AUTON
