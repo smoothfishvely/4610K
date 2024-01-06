@@ -30,233 +30,52 @@ using namespace vex;
 
 competition Competition;
 
-int flyWheel(){
-  int flyControl = 0;
-  while(true){
+void anotherDrive(){
+  int punchControl = 0;
+  while(true) {
+
+    //control puncher
     if(Controller1.ButtonB.pressing()){
-      if(flyControl == 0){
-        topFly.spin(forward,100,pct);
-        bottomFly.spin(reverse,100,pct);
-        flyControl++;
+      if(punchControl == 0){
+        puncher.spin(forward,100,pct);
+        punchControl++;
       } else{
-        topFly.stop();
-        bottomFly.stop();
-        flyControl--;
+        puncher.stop();
+        punchControl--;
       }
     }
-  }
-}
 
-int intake(){
-  while(true){
-    if(Controller1.ButtonR2.pressing()){
-      intakeMotor.spin(forward,100,pct);
+        // Control intake motor
+    if(Controller1.ButtonR2.pressing()) {
+      intakeMotor.spin(forward, 100, pct);
+    } else if(Controller1.ButtonR1.pressing()) {
+      intakeMotor.spin(reverse, 100, pct);
+    } else {
+      intakeMotor.stop();
     }
-    else if(Controller1.ButtonR1.pressing()){
-      intakeMotor.spin(reverse,100,pct);
-    }
-    else{
-    intakeMotor.stop();
-    }
-    wait(20,msec);
-  }
-}
 
-int splitDrive(){
-  while(true){
-    leftFront.spin(forward, Controller1.Axis3.position()+Controller1.Axis1.position(),pct);
-    leftBack.spin(forward, Controller1.Axis3.position()+Controller1.Axis1.position(),pct);
-    rightFront.spin(forward, Controller1.Axis3.position()-Controller1.Axis1.position(),pct);      
-    rightBack.spin(forward,Controller1.Axis3.position()-Controller1.Axis1.position(),pct);
-    wait(20,msec);
-  }
-}
+        // Split drive control
+    leftFront.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
+    leftBack.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
+    rightFront.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
+    rightBack.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
 
-int knooMatics(){
-  int knoo = 0;
-  while(true){
-    if(Controller1.ButtonY.pressing()){
-      while(Controller1.ButtonY.pressing()){
-        wait(20,msec);
-      } 
-      knoo++;
-      if(knoo > 1){
-        knoo = 0;
-      }
-
-      if(knoo == 0){
-        knooMatics1.set(true);
-        knooMatics2.set(true);
-      } else{
-        knooMatics1.set(false);
-        knooMatics2.set(false);
-      }
-    }
-  }
-}
-
-int knoo1(){
-  int matics = 0;
-  while(true){
-    if(Controller1.ButtonY.pressing()){
-      while(Controller1.ButtonY.pressing()){
-        wait(20,msec);
-      } 
-      matics++;
-      if(matics > 1){
-        matics = 0;
-      }
-
-      if(matics == 0){
-        knooMatics1.set(true);
-      } else{
-        knooMatics1.set(false);
-      }
-    }
-  }
-}
-
-int knoo2(){
-  int k = 0;
-  while(true){
-    if(Controller1.ButtonX.pressing()){
-      while(Controller1.ButtonX.pressing()){
-        wait(20,msec);
-      } 
-      k++;
-      if(k > 1){
-        k = 0;
-      }
-
-      if(k == 0){
-        knooMatics2.set(true);
-      } else{
-        knooMatics2.set(false);
-      }
-    }
-  }
-}
-
-int knooMatics3(){
-  while(true){
-    if(Controller1.ButtonL2.pressing()){
-      knooMatics1.set(true);
-      knooMatics2.set(true);
-    }
-    if(Controller1.ButtonL1.pressing()){
-      knooMatics1.set(false);
-      knooMatics2.set(false);
-    }
-  }
-}
-
-int rake(){
-  while(true){
-    if(Controller1.ButtonA.pressing()){
-      rakeWithK.spin(forward, 50, pct);
+        // Control rake
+    if(Controller1.ButtonUp.pressing()) {
+      rakeWithK.spin(forward, 100, pct);
       wait(0.25, sec);
       rakeWithK.setStopping(coast);
       rakeWithK.stop();
-    }
-    if(Controller1.ButtonY.pressing()){
-      rakeWithK.spin(reverse, 50, pct);
+    } else if(Controller1.ButtonDown.pressing()) {
+      rakeWithK.spin(reverse, 100, pct);
       wait(0.25, sec);
       rakeWithK.setStopping(hold);
       rakeWithK.stop();
     }
-  }
+    wait(20, msec); 
+  } 
 }
 
-
-// hello! this is a sample driver i'm adding in for your team to try and work around a few issues i noticed with your drivetrain.
-// -eleri (4610W)
-
-void SPLITDRIVE() {
-// run your predrive here.
-  while (true) {
-  float movement1 = (Controller1.Axis3.position()) + (Controller1.Axis1.position());
-  float movement2 = (Controller1.Axis3.position()) - (Controller1.Axis1.position());
-  leftFront.spin(forward, movement1,  pct);
-  rightFront.spin(forward, movement2, pct);
-
-  leftBack.spin(forward, movement1,  pct);
-  rightBack.spin(forward, movement2, pct);
-  }
-  if (Controller1.ButtonA.pressing()) {
-    rakeWithK.spin(forward, 100, pct);
-  } else if (Controller1.ButtonB.pressing()) {
-//    SECONDARY FUNCTION, WOULD BE USED FOR A HOLD VARIABLE
-  } else {
-    rakeWithK.stop();
-  }
-
-}
-
-
-// I'm impressed you figured out this was a viable way to run a drive program, although I'd like to note it is innefficient.
-// Running everything in one while loop is much easier on the bot and your computer's memory.
-// I'm assuming you were not taught how to include additional controls for a drive program so not knowing to do what I did is not your fault at all. 
-// Good luck at the competition, K!
-
-void driving(){
-  
-    thread f (flyWheel);
-    thread i (intake);
-    thread s (splitDrive);
-    thread n (knooMatics3);
-    thread k (rake);
-
-}
-
-void anotherDrive(){
-    int flyControl = 0;
-  
-    while(true) {
-      // Control flywheel
-      if(Controller1.ButtonB.pressing()) {
-          if(flyControl == 0) {
-            // Start flywheel motors
-            topFly.spin(forward, 100, pct);
-            bottomFly.spin(reverse, 100, pct);
-            flyControl++;
-          } else {
-            // Stop flywheel motors
-            topFly.stop();
-            bottomFly.stop();
-            flyControl--;
-          }
-        }
-
-        // Control intake motor
-        if(Controller1.ButtonR2.pressing()) {
-            intakeMotor.spin(forward, 100, pct);
-        } else if(Controller1.ButtonR1.pressing()) {
-            intakeMotor.spin(reverse, 100, pct);
-        } else {
-            intakeMotor.stop();
-        }
-
-        // Split drive control
-        leftFront.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
-        leftBack.spin(forward, Controller1.Axis3.position() + Controller1.Axis1.position(), pct);
-        rightFront.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
-        rightBack.spin(forward, Controller1.Axis3.position() - Controller1.Axis1.position(), pct);
-
-        // Control rake
-        if(Controller1.ButtonA.pressing()) {
-            rakeWithK.spin(forward, 100, pct);
-            wait(0.25, sec);
-            rakeWithK.setStopping(coast);
-            rakeWithK.stop();
-        } else if(Controller1.ButtonY.pressing()) {
-            rakeWithK.spin(reverse, 100, pct);
-            wait(0.25, sec);
-            rakeWithK.setStopping(hold);
-            rakeWithK.stop();
-        }
-        wait(20, msec); 
-    } 
-}
 //ALL CODE UP HERE IS DRIVE CODE
 //-----------------------------------------------------------------------------------------
 //ALL CODE DOWN HERE IS FOR AUTON
@@ -264,7 +83,7 @@ void anotherDrive(){
 void autonRakeDown(){
   rakeWithK.spin(reverse,100,pct);
   rakeWithK.setStopping(coast);
-  wait(0.5,sec);
+  wait(1,sec);
   rakeWithK.stop();
 }
 
@@ -277,7 +96,7 @@ void autonRakeUp(float seconds){
 
 void turnLeft(int target){
   gyroK.resetRotation();
-  wait(.25, msec);
+  wait(25, msec);
 
   while(gyroK.rotation(degrees) > target){
     float error = -target + gyroK.rotation(degrees);
@@ -307,7 +126,7 @@ void turnLeft(int target){
 
 void turnRight(int target){
   gyroK.resetRotation();
-  wait(.25, seconds);
+  wait(25, msec);
 
   while(gyroK.rotation(degrees) < target){
     float error = target - gyroK.rotation(degrees);
@@ -336,6 +155,7 @@ void awesomeInertial(){
   while(gyroK.isCalibrating()){
     wait(100,msec);
   }
+  rakeWithK.setStopping(hold);
 }
 
 void autonIntakeIn(double time){
@@ -348,41 +168,6 @@ void autonIntakeOut(double time){
   intakeMotor.spin(forward,100,percent);
   wait(time,seconds);
   intakeMotor.stop();
-}
-
-void move(double distance,int velocity){
-  leftFront.setPosition(0,degrees);
-  while(leftFront.position(degrees)<distance){
-    leftFront.spin(forward,velocity,percent);
-    leftBack.spin(forward,velocity,percent);
-    rightFront.spin(forward,velocity,percent);      
-    rightBack.spin(forward,velocity,pct);
-    wait(10,msec);
-    }
-  leftFront.stop();
-  rightFront.stop();
-  rightBack.stop();
-  leftBack.stop();
-}
-
-void moveBack(double distance,int velocity,float kp){
-  leftFront.setPosition(0,degrees);
-  double heading=gyroK.rotation(degrees);
-  if(velocity>0){
-    while(fabs(leftFront.position(degrees))<distance){
-      double error=heading-gyroK.rotation(degrees);
-      double output=error*kp;
-      leftFront.spin(reverse,velocity-output,percent);
-      leftBack.spin(reverse,velocity-output,percent);
-      rightFront.spin(reverse,velocity+output,percent);
-      rightBack.spin(reverse,velocity+output,pct);
-      wait(10,msec);
-    }
-  }
-  leftFront.stop();
-  rightFront.stop();
-  rightBack.stop();
-  leftBack.stop();
 }
 
 void anika(double dist) {   //inches
@@ -475,20 +260,11 @@ void arushi(double dist) {   //inches
     rightBack.setStopping(coast);
 }
 
-/*for auton offensive:
-move();
-autonIntakeOut();
-*/
-int autonSelection = 0;
+
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   awesomeInertial();
-  while(true){
-    if(Controller1.ButtonUp.pressing()){
-      autonSelection = 1;
-    }
-  }
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -496,81 +272,42 @@ void pre_auton(void) {
 void autonomous(void) {
   // ..........................................................................
   //AUTON for offensive
-  if(autonSelection == 1){
-    turnLeft(-44);
-    wait(20,msec);
-    anika(285);
-    turnLeft(-3);
-    anika(45);
-    autonIntakeOut(1);
-    arushi(30);
-    //shove it in the goal
-    turnLeft(-10);
-    anika(90);
-    arushi(65);
-    turnLeft(-135);
-    anika(80);
-    //get matchload
-    turnRight(90);
-    arushi(55);
-    autonRakeDown();
-    wait(400,msec);
-    anika(70);
-    autonRakeUp(0.75);
-    //go to bar
-    turnLeft(-130);
-    anika(50);
-    turnRight(95);
-    anika(290);
-  }
-  //Defensive
-  /*
-  awesomeInertial();
-  right(44);
+  turnLeft(-45);    
   wait(20,msec);
-  anika(285);
-  right(3);
-  anika(45);
+  anika(340);
+  turnLeft(-15);
+  anika(40);
   autonIntakeOut(1);
-  anika(15);
-  */
-
+  arushi(40);
+  //shove it in the goal
+  turnLeft(-15); 
+  anika(120);
+  
+  arushi(60);
+  turnLeft(-135);
+  anika(65);
+    //get matchload
+    
+  turnRight(90);
+  arushi(45);
+  autonRakeDown();
+   
+  wait(400,msec);
+  anika(70);
+  autonRakeUp(0.5);
+  turnRight(45);
+  arushi(110);
+  turnRight(90);
+  arushi(200);
+    
 
   // ..........................................................................
 }
 
 void usercontrol(void) {
   // User control code here, inside the loop
-  while (1) {
-    
-    awesomeInertial();
-    turnLeft(-44);
-    wait(20,msec);
-    anika(285);
-    turnLeft(-3);
-    anika(45);
-    autonIntakeOut(1);
-    arushi(30);
-    //shove it in the goal
-    turnLeft(-10);
-    anika(90);
-    arushi(65);
-    turnLeft(-135);
-    anika(80);
-    //get matchload
-    turnRight(90);
-    arushi(55);
-    autonRakeDown();
-    wait(400,msec);
-    anika(70);
-    autonRakeUp(0.75);
-    //go to bar
-    turnLeft(-130);
-    anika(70);
-    turnRight(95);
-    anika(290);
-    
-    //driving();
+ while (1) {
+   anotherDrive();
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
