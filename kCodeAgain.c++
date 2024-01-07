@@ -30,7 +30,7 @@ using namespace vex;
 
 competition Competition;
 
-void anotherDrive(){
+void driveCode(){
   int punchControl = 0;
   while(true) {
 
@@ -150,7 +150,7 @@ void turnRight(int target){
   rightBack.stop();
 }
 
-void awesomeInertial(){
+void calibrate(){
   gyroK.calibrate();
   while(gyroK.isCalibrating()){
     wait(100,msec);
@@ -170,26 +170,19 @@ void autonIntakeOut(double time){
   intakeMotor.stop();
 }
 
-void anika(double dist) {   //inches
-    //Drive Forward Proportional
+void moveForward(double dist) {  
     leftFront.resetPosition();
-  /*
-    //Convert Inches to Motor Encoder Degrees
-    double w_radius = 4.0 / 2.0; //wheel
-    double r_conv = 3.14159 / 180.0; //radian conversion
-    double gear_ratio = 48.0 / 72.0; //drive train gear ratio*/
-    double target = dist; /// (r_conv * w_radius * gear_ratio);
-
+  
+    double target = dist; 
     while(leftFront.position(degrees) < target) {
         double proportion = target - leftFront.position(degrees); 
         double kp = .6;
         double min_speed = 15;
         double max_speed = 100;
-        double speed = proportion * kp + min_speed; //one way to break out of the loop
+        double speed = proportion * kp + min_speed; 
 
-        if (speed > 100) speed = 100;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
-        if (speed > max_speed) speed = max_speed;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
-
+        if (speed > 100) speed = 100;     
+        if (speed > max_speed) speed = max_speed;
         leftFront.spin(fwd, speed, pct);
         rightFront.spin(fwd, speed, pct);
         leftBack.spin(fwd, speed, pct);
@@ -197,7 +190,6 @@ void anika(double dist) {   //inches
 
     }
 
-    //stopping with break may allow kp and/or minspeed to be higher
     leftFront.setStopping(brake);
     rightFront.setStopping(brake);
     leftBack.setStopping(brake);
@@ -208,7 +200,6 @@ void anika(double dist) {   //inches
     leftBack.stop();
     rightBack.stop();
 
-    //put breaking back to coast after hanging out
     wait(25, msec);
 
     leftFront.setStopping(coast);
@@ -217,8 +208,7 @@ void anika(double dist) {   //inches
     rightBack.setStopping(coast);
 }
 
-void arushi(double dist) {   //inches
-    //Drive Forward with Proportional Stop
+void moveReverse(double dist) {   
     leftFront.resetPosition();
   
     double target = dist;
@@ -228,10 +218,9 @@ void arushi(double dist) {   //inches
         double kp = .6;
         double min_speed = 15;
         double max_speed = 100;
-        double speed = proportion * kp + min_speed; //one way to break out of the loop
-
-        if (speed > 100) speed = 100;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
-        if (speed > max_speed) speed = max_speed;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
+        double speed = proportion * kp + min_speed; 
+        if (speed > 100) speed = 100;     
+        if (speed > max_speed) speed = max_speed;     
 
         leftFront.spin(reverse, speed, pct);
         rightFront.spin(reverse, speed, pct);
@@ -240,7 +229,6 @@ void arushi(double dist) {   //inches
 
     }
 
-    //stopping with break may allow kp and/or minspeed to be higher
     leftFront.setStopping(brake);
     rightFront.setStopping(brake);
     leftBack.setStopping(brake);
@@ -251,7 +239,6 @@ void arushi(double dist) {   //inches
     leftBack.stop();
     rightBack.stop();
 
-    //put breaking back to coast after hanging out
     wait(25, msec);
 
     leftFront.setStopping(coast);
@@ -264,7 +251,7 @@ void arushi(double dist) {   //inches
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  awesomeInertial();
+  calibrate();
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
 }
@@ -274,31 +261,31 @@ void autonomous(void) {
   //AUTON for offensive
   turnLeft(-45);    
   wait(20,msec);
-  anika(340);
+  moveForward(340);
   turnLeft(-15);
-  anika(40);
+  moveForward(40);
   autonIntakeOut(1);
-  arushi(40);
+  moveReverse(40);
   //shove it in the goal
   turnLeft(-15); 
-  anika(120);
+  moveForward(120);
   
-  arushi(60);
+  moveReverse(60);
   turnLeft(-135);
-  anika(65);
+  moveForward(65);
     //get matchload
     
   turnRight(90);
-  arushi(45);
+  moveReverse(45);
   autonRakeDown();
    
   wait(400,msec);
-  anika(70);
+  moveForward(70);
   autonRakeUp(0.5);
   turnRight(45);
-  arushi(110);
+  moveReverse(110);
   turnRight(90);
-  arushi(200);
+  moveReverse(200);
     
 
   // ..........................................................................
@@ -307,7 +294,7 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
  while (1) {
-   anotherDrive();
+   driveCode();
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
