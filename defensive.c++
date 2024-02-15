@@ -14,8 +14,8 @@
 // leftFront            motor         14              
 // rightFront           motor         17              
 // leftBack             motor         19              
-// rightBack            motor         20              
-// intakeMotor          motor         2               
+// rightBack            motor         5               
+// intakeMotor          motor         21              
 // puncherLeft          motor         18              
 // topFly               motor         15              
 // rakeWithK            motor         7               
@@ -504,13 +504,15 @@ void autonomous(void) {
 
   //adjust position for bar touch
   anika(30, 15, 90);
+
+  //up here works
   turnLeft(-45);
   arushi(60, 15, 90);
   autonRakeUp(0.5);
 
   //go to bar
-  turnLeft(-75);
-  arushi(140, 5, 20);
+  turnLeft(-80);
+  arushi(290, 5, 20);
   autonRakeDown();
   
   /*(
