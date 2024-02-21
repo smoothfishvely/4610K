@@ -15,7 +15,7 @@
 // rightFront           motor         17              
 // leftBack             motor         19              
 // rightBack            motor         5               
-// intakeMotor          motor         21              
+// intakeMotor          motor         16              
 // puncherLeft          motor         18              
 // topFly               motor         15              
 // rakeWithK            motor         7               
@@ -113,7 +113,8 @@ int knoo1(){
 
       if(matics == 0){
         knooMatics1.set(true);
-      } else{
+      }
+      if(matics == 1){
         knooMatics1.set(false);
       }
     }
@@ -143,11 +144,11 @@ int knoo2(){
 
 int knooMatics3(){
   while(true){
-    if(Controller1.ButtonL2.pressing()){
+    while(Controller1.ButtonL2.pressing()){
       knooMatics1.set(true);
       knooMatics2.set(true);
     }
-    if(Controller1.ButtonL1.pressing()){
+    while(Controller1.ButtonL1.pressing()){
       knooMatics1.set(false);
       knooMatics2.set(false);
     }
@@ -172,6 +173,45 @@ int rake(){
 }
 
 
+// hello! this is a sample driver i'm adding in for your team to try and work around a few issues i noticed with your drivetrain.
+// -eleri (4610W)
+
+void SPLITDRIVE() {
+// run your predrive here.
+  while (true) {
+  float movement1 = (Controller1.Axis3.position()) + (Controller1.Axis1.position());
+  float movement2 = (Controller1.Axis3.position()) - (Controller1.Axis1.position());
+  leftFront.spin(forward, movement1,  pct);
+  rightFront.spin(forward, movement2, pct);
+
+  leftBack.spin(forward, movement1,  pct);
+  rightBack.spin(forward, movement2, pct);
+  }
+  if (Controller1.ButtonA.pressing()) {
+    rakeWithK.spin(forward, 100, pct);
+  } else if (Controller1.ButtonB.pressing()) {
+//    SECONDARY FUNCTION, WOULD BE USED FOR A HOLD VARIABLE
+  } else {
+    rakeWithK.stop();
+  }
+
+}
+
+
+// I'm impressed you figured out this was a viable way to run a drive program, although I'd like to note it is innefficient.
+// Running everything in one while loop is much easier on the bot and your computer's memory.
+// I'm assuming you were not taught how to include additional controls for a drive program so not knowing to do what I did is not your fault at all. 
+// Good luck at the competition, K!
+
+void driving(){
+  
+    //thread f (flyWheel);
+    thread i (intake);
+    thread s (splitDrive);
+    thread n (knooMatics3);
+    thread k (rake);
+
+}
 bool punchControl = false;
 
 int puncher(){
@@ -187,10 +227,9 @@ int puncher(){
       puncherRight.stop();
       puncherLeft.stop();
     }
-    wait(10,msec);
+    wait(80,msec);
   }
 }
-
 
 //USE THIS DRIVE
 void finalDrive(){
@@ -198,11 +237,36 @@ void finalDrive(){
 
   while(true) {
     thread p (puncher);
-
     leftFront.spin(forward, Controller1.Axis3.position() + (Controller1.Axis1.position()/2), pct);
     leftBack.spin(forward, Controller1.Axis3.position() + (Controller1.Axis1.position()/2), pct);
     rightFront.spin(forward, Controller1.Axis3.position() - (Controller1.Axis1.position()/2), pct);
     rightBack.spin(forward, Controller1.Axis3.position() - (Controller1.Axis1.position()/2), pct);   
+
+    //puncher
+    /*if(Controller1.ButtonB.pressing()){
+      if(punchControl == 0){
+        puncherRight.spin(forward,30,pct);
+        puncherLeft.spin(forward, 30, pct);
+        punchControl++;
+      } else{
+        puncherRight.stop();
+        puncherLeft.stop();
+        punchControl--;
+      }
+    }*/
+
+    if(Controller1.ButtonL2.pressing()){
+      while(Controller1.ButtonL2.pressing()){
+        knooMatics1.set(true);
+        knooMatics2.set(true);
+      }
+    }
+    if(Controller1.ButtonL1.pressing()){
+      while(Controller1.ButtonL1.pressing()){
+        knooMatics1.set(false);
+        knooMatics2.set(false);
+      }
+    }
 
         //intake
     if(Controller1.ButtonR2.pressing()) {
@@ -359,7 +423,7 @@ void moveBack(double distance,int velocity,float kp){
 }
 
 //forward
-void anika(double dist, int minSpeed, int maxSpeed) {   //inches
+void anika(double dist, int max, int min) {   //inches
     //Drive Forward Proportional
     leftFront.resetPosition();
   /*
@@ -371,9 +435,9 @@ void anika(double dist, int minSpeed, int maxSpeed) {   //inches
 
     while(leftFront.position(degrees) < target) {
         double proportion = target - leftFront.position(degrees); 
-        double kp = .4;
-        double min_speed = minSpeed;
-        double max_speed = maxSpeed;
+        double kp = .6;
+        double min_speed = min;
+        double max_speed = max;
         double speed = proportion * kp + min_speed; //one way to break out of the loop
 
         if (speed > 100) speed = 100;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
@@ -407,7 +471,7 @@ void anika(double dist, int minSpeed, int maxSpeed) {   //inches
 }
 
 //reverse
-void arushi(double dist, int min, int max) {   //inches
+void arushi(double dist, int max, int min) {   //inches
     //Drive Forward with Proportional Stop
     leftFront.resetPosition();
   
@@ -415,7 +479,7 @@ void arushi(double dist, int min, int max) {   //inches
 
     while(leftFront.position(degrees) > -target) {
         double proportion = target - leftFront.position(degrees); 
-        double kp = .2;
+        double kp = .6;
         double min_speed = min;
         double max_speed = max;
         double speed = proportion * kp + min_speed; //one way to break out of the loop
@@ -469,50 +533,52 @@ void autonomous(void) {
   
   turnRight(45);
   wait(20, msec);
-  anika(315,15, 90);
+  anika(315,90, 15);
 
   
   //adjust position
   turnRight(28);
   //push the triball in
-  anika(50,15, 90);
+  anika(50,90, 15);
   autonIntakeOut(0.75);
 
   //second push at angle
-  arushi(40, 20, 100);
+  arushi(40, 40, 20);
   turnRight(15);
 
 
-  anika(110, 30, 100);
+  anika(110, 90, 15);
 
   //back up
-  arushi(195, 10, 50);
+  arushi(195, 50, 10);
 
   //go to match load area
   turnRight(135);
-  anika(75, 15, 90);
+  anika(75, 90, 15);
 
   turnLeft(-90);
-  arushi(40, 15, 90);
+  arushi(40, 50, 15);
 
   //retrieve match load
   autonRakeDown();
   
-  wait(200, msec);
-  anika(40, 15, 90);
+  wait(100, msec);
+  autonRakeDown();
+  wait(75,msec);
+  anika(40, 90, 15);
   autonRakeUp(0.5);
 
   //adjust position for bar touch
-  anika(30, 15, 90);
+  anika(30, 90, 15);
 
   //up here works
   turnLeft(-45);
-  arushi(60, 15, 90);
   autonRakeUp(0.5);
+  arushi(130, 60, 15);
 
   //go to bar
-  turnLeft(-80);
-  arushi(290, 5, 20);
+  turnLeft(-85);
+  arushi(270, 50, 10);
   autonRakeDown();
   
   /*(
@@ -527,7 +593,6 @@ void autonomous(void) {
   */
   // ..........................................................................
 }
-
 void usercontrol(void) {
   // User control code here, inside the loop
   while(1){
