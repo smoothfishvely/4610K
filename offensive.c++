@@ -13,10 +13,9 @@
 // leftFront            motor         14              
 // rightFront           motor         17              
 // leftBack             motor         19              
-// rightBack            motor         20              
-// intakeMotor          motor         2               
+// rightBack            motor         5               
+// intakeMotor          motor         16              
 // puncherRight         motor         12              
-// topFly               motor         15              
 // rakeWithK            motor         7               
 // gyroK                inertial      10              
 // knooMatics1          digital_out   A               
@@ -113,7 +112,8 @@ int knoo1(){
 
       if(matics == 0){
         knooMatics1.set(true);
-      } else{
+      }
+      if(matics == 1){
         knooMatics1.set(false);
       }
     }
@@ -143,11 +143,11 @@ int knoo2(){
 
 int knooMatics3(){
   while(true){
-    if(Controller1.ButtonL2.pressing()){
+    while(Controller1.ButtonL2.pressing()){
       knooMatics1.set(true);
       knooMatics2.set(true);
     }
-    if(Controller1.ButtonL1.pressing()){
+    while(Controller1.ButtonL1.pressing()){
       knooMatics1.set(false);
       knooMatics2.set(false);
     }
@@ -226,7 +226,7 @@ int puncher(){
       puncherRight.stop();
       puncherLeft.stop();
     }
-    wait(10,msec);
+    wait(80,msec);
   }
 }
 
@@ -236,7 +236,6 @@ void finalDrive(){
 
   while(true) {
     thread p (puncher);
-
     leftFront.spin(forward, Controller1.Axis3.position() + (Controller1.Axis1.position()/2), pct);
     leftBack.spin(forward, Controller1.Axis3.position() + (Controller1.Axis1.position()/2), pct);
     rightFront.spin(forward, Controller1.Axis3.position() - (Controller1.Axis1.position()/2), pct);
@@ -254,6 +253,19 @@ void finalDrive(){
         punchControl--;
       }
     }*/
+
+    if(Controller1.ButtonL2.pressing()){
+      while(Controller1.ButtonL2.pressing()){
+        knooMatics1.set(true);
+        knooMatics2.set(true);
+      }
+    }
+    if(Controller1.ButtonL1.pressing()){
+      while(Controller1.ButtonL1.pressing()){
+        knooMatics1.set(false);
+        knooMatics2.set(false);
+      }
+    }
 
         //intake
     if(Controller1.ButtonR2.pressing()) {
