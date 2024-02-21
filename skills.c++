@@ -15,11 +15,12 @@
 // leftFront            motor         14              
 // leftBack             motor         19              
 // rightFront           motor         17              
-// rightBack            motor         20              
-// intakeMotor          motor         2               
+// rightBack            motor         5               
+// intakeMotor          motor         16              
 // rakeWithK            motor         7               
 // Controller1          controller                    
 // gyroK                inertial      10              
+// knooMatics           digital_out   A               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -45,7 +46,7 @@ competition Competition;
 void autonRakeDown(){
   rakeWithK.spin(reverse,100,pct);
   rakeWithK.setStopping(coast);
-  wait(1,sec);
+  wait(0.5,sec);
   rakeWithK.stop();
 }
 
@@ -182,8 +183,8 @@ void anika(double dist, int max, int min) {   //inches
     while(leftFront.position(degrees) < target) {
         double proportion = target - leftFront.position(degrees); 
         double kp = .6;
-        double min_speed = 15;
-        double max_speed = 90;
+        double min_speed = min;
+        double max_speed = max;
         double speed = proportion * kp + min_speed; //one way to break out of the loop
 
         if (speed > 100) speed = 100;     // In old IQ Speed over 100 results in no movement (velocity cannot be > 100)
@@ -260,33 +261,88 @@ void arushi(double dist, int max, int min) {   //inches
     rightBack.setStopping(coast);
 }
 
+void tessa(float ms, int speed){
+  leftFront.spin(fwd, speed, pct);
+  rightFront.spin(fwd, speed, pct);
+  leftBack.spin(fwd, speed, pct);
+  rightBack.spin(fwd, speed, pct);
+  wait(ms,msec);
+  
+  leftFront.stop();
+  rightFront.stop();
+  leftBack.stop();
+  rightBack.stop();
+}
+
 void autonomous(void) {
   // ..........................................................................
   autonRakeDown();
-  puncherRight.spin(forward,44,pct);
-  puncherLeft.spin(forward,44,pct);
-  wait(39,sec);
+  puncherRight.spin(forward,45,pct);
+  puncherLeft.spin(forward,45,pct);
+  wait(4,sec);
   //done match loading
 
+  //stop puncher, lift rake
   puncherRight.stop();
   puncherLeft.stop();
   autonRakeUp(2);
   
+  //adjust position and move forward
   turnLeft(-5);
   anika(500, 80, 20);
-   
+
+  //robot is facing forward 
+  turnRight(45);
+  //move to bar
+  anika(210, 20, 5);
+  wait(20, msec);
+
+  //turn to clear
+  turnLeft(-90);
+  wait(20, msec);
+  anika(400, 20, 5);
+  autonIntakeOut(0.7);
+  //backwards
+  arushi(310, 20, 5);
+  turnRight(90);
+  arushi(410, 30, 5);
+  tessa(2500,100);
+  knooMatics.set(true);
+  arushi(500, 60, 7);
+  tessa(2800,100);
+  turnRight(10);
+  knooMatics.set(false);
+  arushi(70, 20, 5);
+
+
 
   /*
-  turnRight(45);
-  arushi(200, 30, 15);
-  wait(40, msec);
-  anika(1000, 100, 100);
-  arushi(500, 80, 15);
-  anika(1000, 80, 20);
-  arushi(500, 80, 15);
-  anika(1000, 80, 20);
-  arushi(500, 80, 15);
-  anika(1000, 80, 20);
+  //possible go over
+  tessa(1500,100);
+  wait(10,msec);
+  arushi(300, 80, 15);
+
+  wait(20,msec);
+  knooMatics.set(true);'
+  */
+
+  /*
+  //second go over chance
+  tessa(1500, 100);
+  turnRight(15);
+  wait(20,msec);
+  tessa(500, 90);
+  knooMatics.set(false);
+  arushi(300, 80, 15);
+  wait(20,msec);
+  knooMatics.set(true);
+  tessa(250, 70);
+  wait(50,msec);
+  knooMatics.set(false);
+  arushi(300, 80, 15);
+  wait(20,msec);
+  knooMatics.set(true);
+  anika(400, 80, 20);
   */
   // ..........................................................................
 }
