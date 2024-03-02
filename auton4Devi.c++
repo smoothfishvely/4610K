@@ -213,6 +213,7 @@ void driving(){
     thread k (rake);
 
 }
+
 bool punchControl = false;
 
 int puncher(){
@@ -537,7 +538,9 @@ void autonomous(void) {
   knooMatics1.set(true);
   wait(500,msec);
   knooMatics1.set(false);
-  driveForward(350, 40, 5);
+//preload has been launched
+
+  driveForward(350, 50, 5);
   wait(100,msec);
   turnRight(90);
 
@@ -548,30 +551,41 @@ void autonomous(void) {
   turnLeft(-90);
   wait(100,msec);
   driveForward(355, 20, 5);
+  //reached middle triball
+
   intakeMotor.spin(reverse, 100, pct);
   wait(0.75, sec);
 
-  //preload triball has been intaked
+  //middle triball has been intaked
   driveReverse(100, 40, 5);
   turnRight(90);
-  driveForward(150, 60, 5);
+  driveForward(130, 65, 5);
   wait(100,msec);
   intakeMotor.spin(forward, 100, pct);
-  driveForward(150, 55, 5);
+  driveForward(130, 60, 5);
   wait(0.75, sec);
   intakeMotor.stop();
 
   driveReverse(125, 50, 5);
+//robot is off bar
+
   wait(100,msec);
-  driveForward(50, 20, 5);
-  wait(100, msec);
-  turnRight(90);
+  driveForward(80, 15, 5);
+  wait(200, msec);
+  driveReverse(10, 20, 5);
+  turnRight(105);
+  wait(200,msec);
+  driveReverse(25, 25, 5);
+  wait(200,msec);
+//at bar touching triball
+
+  autonRakeDown(0.38);
+  wait(300,msec);
+  //collect triball using rake, move to    
+  driveForward(50, 30, 5);
   wait(100,msec);
-  driveReverse(40, 40, 5);
+  turnLeft(-100);
   wait(100,msec);
-  autonRakeDown(0.35);
-  wait(100,msec);
-  driveForward(50, 40, 5);
   //phase 2
   //back up from goal
 
