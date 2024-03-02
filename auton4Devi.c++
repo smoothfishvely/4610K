@@ -207,6 +207,7 @@ void driving(){
   
     //thread f (flyWheel);
     thread i (intake);
+  
     thread s (splitDrive);
     thread n (knooMatics3);
     thread k (rake);
@@ -220,8 +221,8 @@ int puncher(){
       punchControl = !punchControl;
     }
     if(punchControl == true){
-      puncherRight.spin(forward,46,pct);
-      puncherLeft.spin(forward, 46, pct);
+      puncherRight.spin(forward,48,pct);
+      puncherLeft.spin(forward, 48, pct);
     }
     if(punchControl == false){
       puncherRight.stop();
@@ -300,14 +301,14 @@ void DeviDrive(){
 //ALL CODE DOWN HERE IS FOR AUTON
 
 void autonRakeDown(float seconds){
-  rakeWithK.spin(reverse,100,pct);
-  rakeWithK.setStopping(coast);
+  rakeWithK.spin(forward,100,pct);
+  rakeWithK.setStopping(hold);
   wait(seconds,sec);
   rakeWithK.stop();
 }
 
 void autonRakeUp(float seconds){
-  rakeWithK.spin(forward,50,pct);
+  rakeWithK.spin(reverse,50,pct);
   rakeWithK.setStopping(hold);
   wait(seconds,sec);
   rakeWithK.stop();
@@ -534,24 +535,45 @@ void autonomous(void) {
   // ..........................................................................
   //phase 1
   knooMatics1.set(true);
-  wait(1000,msec);
+  wait(500,msec);
   knooMatics1.set(false);
-  //preload has been launched (hit by wing)
-
-  //go to middle triball
-  driveForward(400, 50, 5);
+  driveForward(350, 40, 5);
   wait(100,msec);
   turnRight(90);
+
   wait(100,msec);
-  driveForward(100, 50, 5);
+  driveForward(100, 40, 5);
+
   wait(100,msec);
   turnLeft(-90);
   wait(100,msec);
-  driveForward(100, 20, 5);
-  
-  autonIntakeIn(0.75);
-  //middle triball has been retrieved by intake
+  driveForward(355, 20, 5);
+  intakeMotor.spin(reverse, 100, pct);
+  wait(0.75, sec);
 
+  //preload triball has been intaked
+  driveReverse(100, 40, 5);
+  turnRight(90);
+  driveForward(150, 60, 5);
+  wait(100,msec);
+  intakeMotor.spin(forward, 100, pct);
+  driveForward(150, 55, 5);
+  wait(0.75, sec);
+  intakeMotor.stop();
+
+  driveReverse(125, 50, 5);
+  wait(100,msec);
+  driveForward(50, 20, 5);
+  wait(100, msec);
+  turnRight(90);
+  wait(100,msec);
+  driveReverse(40, 40, 5);
+  wait(100,msec);
+  autonRakeDown(0.35);
+  wait(100,msec);
+  driveForward(50, 40, 5);
+  //phase 2
+  //back up from goal
 
   // ..........................................................................
 }
@@ -619,4 +641,3 @@ int main() {
 
   }
 } 
-
