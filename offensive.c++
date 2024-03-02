@@ -219,8 +219,8 @@ int puncher(){
       punchControl = !punchControl;
     }
     if(punchControl == true){
-      puncherRight.spin(forward,44,pct);
-      puncherLeft.spin(forward, 44, pct);
+      puncherRight.spin(forward,46,pct);
+      puncherLeft.spin(forward, 46, pct);
     }
     if(punchControl == false){
       puncherRight.stop();
@@ -276,12 +276,12 @@ void finalDrive(){
       intakeMotor.stop();
     }
         // rake
-    if(Controller1.ButtonUp.pressing()) {
+    if(Controller1.ButtonDown.pressing()) {
       rakeWithK.spin(forward, 100, pct);
       wait(0.25, sec);
       rakeWithK.setStopping(hold);
       rakeWithK.stop();
-    } else if(Controller1.ButtonDown.pressing()) {
+    } else if(Controller1.ButtonUp.pressing()) {
       rakeWithK.spin(reverse, 100, pct);
       wait(0.25, sec);
       rakeWithK.setStopping(coast);
