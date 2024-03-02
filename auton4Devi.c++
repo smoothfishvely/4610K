@@ -533,26 +533,25 @@ void pre_auton(void) {
 void autonomous(void) {
   // ..........................................................................
   //phase 1
-  //go to goal
   knooMatics1.set(true);
   wait(1000,msec);
   knooMatics1.set(false);
-  driveForward(400, 40, 5);
+  //preload has been launched (hit by wing)
+
+  //go to middle triball
+  driveForward(400, 50, 5);
   wait(100,msec);
   turnRight(90);
-
   wait(100,msec);
-  driveForward(100, 40, 5);
-
+  driveForward(100, 50, 5);
   wait(100,msec);
   turnLeft(-90);
   wait(100,msec);
   driveForward(100, 20, 5);
+  
   autonIntakeIn(0.75);
-  //preload triball has been released
+  //middle triball has been retrieved by intake
 
-  //phase 2
-  //back up from goal
 
   // ..........................................................................
 }
