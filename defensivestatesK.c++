@@ -222,8 +222,8 @@ int puncher(){
       punchControl = !punchControl;
     }
     if(punchControl == true){
-      puncherRight.spin(forward,48,pct);
-      puncherLeft.spin(forward, 48, pct);
+      puncherRight.spin(forward,49,pct);
+      puncherLeft.spin(forward, 49, pct);
     }
     if(punchControl == false){
       puncherRight.stop();
@@ -534,58 +534,70 @@ void pre_auton(void) {
 
 void autonomous(void) {
   // ..........................................................................
-  //phase 1
   knooMatics1.set(true);
-  wait(500,msec);
+  wait(1000,msec);
   knooMatics1.set(false);
 //preload has been launched
 
-  driveForward(350, 50, 5);
+  driveForward(255, 100, 5);
   wait(100,msec);
   turnRight(90);
 
+  //1st turn
   wait(100,msec);
-  driveForward(100, 40, 5);
+  driveForward(115, 100, 5);
 
   wait(100,msec);
-  turnLeft(-90);
+  turnLeft(-85);
   wait(100,msec);
-  driveForward(355, 20, 5);
+  intakeMotor.spin(forward,100,pct);
+  driveForward(95, 55, 5);
+  wait(750, msec);
   //reached middle triball
 
-  intakeMotor.spin(reverse, 100, pct);
-  wait(0.75, sec);
-
-  //middle triball has been intaked
-  driveReverse(100, 40, 5);
-  turnRight(90);
-  driveForward(130, 65, 5);
-  wait(100,msec);
   intakeMotor.spin(forward, 100, pct);
-  driveForward(130, 60, 5);
+  wait(.65, sec);
+  intakeMotor.spin(forward,100,pct);
+  //middle triball has been intaked
+  driveReverse(50, 40, 5);
+  intakeMotor.spin(forward,100,pct);
   wait(0.75, sec);
+  turnRight(90);
+  driveForward(100, 100, 15);
+  wait(100,msec);
+  intakeMotor.spin(reverse, 100, pct);
+  driveForward(75, 100, 10);
+  wait(0.25, sec);
   intakeMotor.stop();
-
+  driveReverse(185, 100, 5);
+  
+  //leaving bar for ml zone
+  turnLeft(-45);
+  driveReverse(450, 100, 5);
+  autonRakeDown(0.7);
+  wait(1000,msec);
+  driveForward(50, 100, 5);
+  /*
   driveReverse(125, 50, 5);
 //robot is off bar
 
   wait(100,msec);
-  driveForward(80, 15, 5);
+  driveForward(100, 20, 5);
   wait(200, msec);
+  
   driveReverse(10, 20, 5);
   turnRight(105);
   wait(200,msec);
-  driveReverse(25, 25, 5);
-  wait(200,msec);
 //at bar touching triball
 
+  driveReverse(15, 20, 5);
   autonRakeDown(0.38);
   wait(300,msec);
   //collect triball using rake, move to    
-  driveForward(50, 30, 5);
+  driveForward(60, 30, 5);
   wait(100,msec);
   turnLeft(-100);
-  wait(100,msec);
+  wait(100,msec);*/
   //phase 2
   //back up from goal
 
